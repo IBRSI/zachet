@@ -39,7 +39,7 @@
         let rabbitModel;
         let hatModel;
 
-        // Загружаем GLB модель кролика
+        
         BABYLON.SceneLoader.Append("rabbit.glb", "", scene, function (scene) {
             scene.meshes.forEach((mesh, index) => {
                 console.log(`Индекс: ${index}, Имя: ${mesh.name}`);
@@ -54,13 +54,13 @@
             }
         });
 
-        // Функция для замены кролика на шляпу
+        
         function transformRabbitToHat() {
             if (rabbitModel) {
-                // Удаляем модель кролика
+                
                 rabbitModel.dispose();
 
-                // Загружаем модель шляпы
+                
                 BABYLON.SceneLoader.Append("hat.glb", "", scene, function (scene) {
                     hatModel = scene.meshes[0];
                     hatModel.position.y = 0;
@@ -81,10 +81,10 @@
 
                 
                 BABYLON.SceneLoader.Append("rabbit.glb", "", scene, function (scene) {
-                    const index = 0; // Укажите индекс меша, который вы хотите получить
+                    const index = 0; 
                     if (index < scene.meshes.length) {
-                        rabbitModel = scene.meshes[index]; // Сохраняем ссылку на модель кролика
-                        rabbitModel.position.y = 0; // Устанавливаем позицию модели
+                        rabbitModel = scene.meshes[index]; 
+                        rabbitModel.position.y = 0; 
                     } else {
                         console.error("Индекс выходит за пределы массива мешей.");
                     }
