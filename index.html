@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Алиса в стране чудес</title>
+    <title>Babylon.js GLB Loader</title>
     <style>
         body { margin: 0; }
         canvas { width: 100%; height: 100%; display: block; }
     </style>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
-    <script src="https://cdn.babylonjs.com/gui/babylon.gui.js"></script>
 </head>
 <body>
     <canvas id="renderCanvas"></canvas>
@@ -27,17 +26,8 @@
         // Создаем свет
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
-        // Создаем текстовое сообщение
-        const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-        const textBlock = new BABYLON.GUI.TextBlock();
-        textBlock.text = "Вы выбрали кролика!";
-        textBlock.color = "white";
-        textBlock.fontSize = 24;
-        textBlock.isVisible = false; // Скрываем текст по умолчанию
-        advancedTexture.addControl(textBlock);
-
         // Загружаем GLB модель
-        BABYLON.SceneLoader.Append("https://cdn.babylonjs.com/meshes/rabbit/rabbit.glb", "", scene, function (scene) {
+        BABYLON.SceneLoader.Append("rabbit.glb", "", scene, function (scene) {
             // Выводим имена и индексы всех мешей
             scene.meshes.forEach((mesh, index) => {
                 console.log(`Индекс: ${index}, Имя: ${mesh.name}`);
@@ -50,11 +40,15 @@
                 model.position.y = 0; // Устанавливаем позицию модели
                 model.scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); // Уменьшаем модель в 10 раз
 
-                // Добавляем взаимодействие с моделью
+                // Добавляем взаимодействие
                 model.actionManager = new BABYLON.ActionManager(scene);
-                model.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function () {
-                    textBlock.isVisible = true; // Показываем текст при нажатии на модель
-                }));
+                model.actionManager.registerAction(
+                    new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function () {
+                        // Изменяем цвет модели при нажатии
+                        model.material = new BABYLON.StandardMaterial("newMat", scene);
+                        model.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+                    })
+                );
             } else {
                 console.error("Индекс выходит за пределы массива мешей.");
             }
