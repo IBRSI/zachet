@@ -99,3 +99,16 @@
         // Обработчики событий нажатия на кнопки
         document.getElementById("transformButton").addEventListener("click", transformRabbitToHat);
         document.getElementById("returnButton").addEventListener("click", returnRabbit);
+
+        // Запускаем рендеринг
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
+
+        // Обработка изменения размера окна
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>
