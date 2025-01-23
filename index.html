@@ -3,18 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Алиса в стране чудес</title>
+    <title>Babylon.js GLB Loader</title>
     <style>
-        body { margin: 0; display: flex; flex-direction: column; align-items: center; }
+        body { margin: 0; }
         canvas { width: 100%; height: 100%; display: block; }
-        button { margin: 10px; padding: 10px; font-size: 16px; }
+        #buttonContainer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
     </style>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
 </head>
 <body>
+    <div id="buttonContainer">
+        <button id="transformButton">Transform Rabbit to Box</button>
+    </div>
     <canvas id="renderCanvas"></canvas>
-    <button id="rotateButton">Вращать модель</button>
     <script>
         // Создаем сцену и движок
         const canvas = document.getElementById("renderCanvas");
@@ -28,43 +35,48 @@
         // Создаем свет
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
-        let model; // Переменная для хранения модели
-        let isRotating = false; // Флаг для отслеживания состояния вращения
+        let rabbitModel;
 
         // Загружаем GLB модель
-        BABYLON.SceneLoader.Append("rabbit.glb", "", scene, function (loadedScene) {
+        BABYLON.SceneLoader.Append("rabbit.glb", "", scene, function (scene) {
             // Выводим имена и индексы всех мешей
-            loadedScene.meshes.forEach((mesh, index) => {
+            scene.meshes.forEach((mesh, index) => {
                 console.log(`Индекс: ${index}, Имя: ${mesh.name}`);
             });
 
             // Получаем первый меш по индексу
             const index = 0; // Укажите индекс меша, который вы хотите получить
-            if (index < loadedScene.meshes.length) {
-                model = loadedScene.meshes[index]; // Получаем меш по индексу
-                model.position.y = 0; // Устанавливаем позицию модели
+            if (index < scene.meshes.length) {
+                rabbitModel = scene.meshes[index]; // Сохраняем ссылку на модель кролика
+                rabbitModel.position.y = 0; // Устанавливаем позицию модели
             } else {
                 console.error("Индекс выходит за пределы массива мешей.");
             }
         });
 
+        // Функция для замены кролика на коробку
+        function transformRabbitToBox() {
+            if (rabbitModel) {
+                // Удаляем модель кролика
+                rabbitModel.dispose();
+
+                // Создаем коробку
+                const box = BABYLON.MeshBuilder.CreateBox("box", { size: 1 }, scene);
+                box.position.y = 0; // Устанавливаем позицию коробки
+            }
+        }
+
+        // Обработчик события нажатия на кнопку
+        document.getElementById("transformButton").addEventListener("click", transformRabbitToBox);
+
         // Запускаем рендеринг
         engine.runRenderLoop(function () {
             scene.render();
-            if (isRotating && model) {
-                model.rotation.y += 0.01; // Вращаем модель
-            }
         });
 
         // Обработка изменения размера окна
         window.addEventListener("resize", function () {
             engine.resize();
-        });
-
-        // Обработка нажатия на кнопку
-        document.getElementById("rotateButton").addEventListener("click", function () {
-            isRotating = !isRotating; // Переключаем состояние вращения
-            this.textContent = isRotating ? "Остановить вращение" : "Вращать модель"; // Меняем текст кнопки
         });
     </script>
 </body>
