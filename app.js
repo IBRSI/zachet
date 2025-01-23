@@ -17,7 +17,7 @@ const createScene = function () {
     const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
 
     // Загружаем 3D модель (например, модель персонажа из фильма)
-    BABYLON.SceneLoader.ImportMesh("", "https://models.babylonjs.com/", "your_model.babylon", scene, function (meshes) {
+    BABYLON.SceneLoader.ImportMesh("", "rabbit", "scene.gltf", scene, function (meshes) {
         const model = meshes[0];
         model.position.y = 0;
 
