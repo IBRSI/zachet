@@ -64,7 +64,8 @@
                 BABYLON.SceneLoader.Append("hat.glb", "", scene, function (scene) {
                     // Получаем первый меш шляпы
                     const hatMesh = scene.meshes[0]; // Предполагаем, что шляпа - это первый меш
-                    hatMesh.position.y = 0; // Устанавливаем позицию шляпы
+                    hatMesh.position.y = 0;
+                    hatMesh.scaling = new BABYLON.Vector3(0.5, 0.5, 0.5);
                 });
             }
         }
