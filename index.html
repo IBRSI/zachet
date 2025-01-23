@@ -1,16 +1,57 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <title>VR Приложение для Рекламы Фильма</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Babylon.js GLB Loader</title>
     <style>
-        body { margin: 0; overflow: hidden; }
-        canvas { width: 100%; height: 100%; }
+        body { margin: 0; }
+        canvas { width: 100%; height: 100%; display: block; }
     </style>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.js"></script>
 </head>
 <body>
     <canvas id="renderCanvas"></canvas>
-    <script src="https://cdn.babylonjs.com/babylon.js"></script>
-    <script src="https://cdn.babylonjs.com/babylonjs.gui.js"></script>
-    <script src="app.js"></script>
+    <script>
+        // Создаем сцену и движок
+        const canvas = document.getElementById("renderCanvas");
+        const engine = new BABYLON.Engine(canvas, true);
+        const scene = new BABYLON.Scene(engine);
+
+        // Создаем камеру
+        const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 5, BABYLON.Vector3.Zero(), scene);
+        camera.attachControl(canvas, true);
+
+        // Создаем свет
+        const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+
+        // Загружаем GLB модель
+        BABYLON.SceneLoader.Append("rabbit.glb", "", scene, function (scene) {
+            // Выводим имена и индексы всех мешей
+            scene.meshes.forEach((mesh, index) => {
+                console.log(`Индекс: ${index}, Имя: ${mesh.name}`);
+            });
+
+            // Получаем первый меш по индексу
+            const index = 0; // Укажите индекс меша, который вы хотите получить
+            if (index < scene.meshes.length) {
+                const model = scene.meshes[index]; // Получаем меш по индексу
+                model.position.y = 0; // Устанавливаем позицию модели
+            } else {
+                console.error("Индекс выходит за пределы массива мешей.");
+            }
+        });
+
+        // Запускаем рендеринг
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
+
+        // Обработка изменения размера окна
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
 </body>
 </html>
