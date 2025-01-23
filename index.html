@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Babylon.js GLB Loader</title>
+    <title>Алиса в стране чудес</title>
     <style>
         body { margin: 0; }
         canvas { width: 100%; height: 100%; display: block; }
@@ -38,7 +38,7 @@
             if (index < scene.meshes.length) {
                 const model = scene.meshes[index]; // Получаем меш по индексу
                 model.position.y = 0; // Устанавливаем позицию модели
-                model.scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); // Уменьшаем модель в 10 раз
+                model.scaling = new BABYLON.Vector3(0.5, 0.5, 0.5); // Уменьшаем модель в 10 раз
             } else {
                 console.error("Индекс выходит за пределы массива мешей.");
             }
