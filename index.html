@@ -20,6 +20,7 @@
 <body>
     <div id="buttonContainer">
         <button id="transformButton">Transform Rabbit to Hat</button>
+        <button id="returnButton" style="display: none;">Return Rabbit</button>
     </div>
     <canvas id="renderCanvas"></canvas>
     <script>
@@ -36,15 +37,14 @@
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
         let rabbitModel;
+        let hatModel;
 
         // Загружаем GLB модель кролика
         BABYLON.SceneLoader.Append("rabbit.glb", "", scene, function (scene) {
-            // Выводим имена и индексы всех мешей
             scene.meshes.forEach((mesh, index) => {
                 console.log(`Индекс: ${index}, Имя: ${mesh.name}`);
             });
 
-            // Получаем первый меш по индексу
             const index = 0; // Укажите индекс меша, который вы хотите получить
             if (index < scene.meshes.length) {
                 rabbitModel = scene.meshes[index]; // Сохраняем ссылку на модель кролика
@@ -62,26 +62,40 @@
 
                 // Загружаем модель шляпы
                 BABYLON.SceneLoader.Append("hat.glb", "", scene, function (scene) {
-                    // Получаем первый меш шляпы
-                    const hatMesh = scene.meshes[0]; // Предполагаем, что шляпа - это первый меш
-                    hatMesh.position.y = 0;
-                    hatMesh.scaling = new BABYLON.Vector3(0.2, 0.2, 0.2);
+                    hatModel = scene.meshes[0]; // Предполагаем, что шляпа - это первый меш
+                    hatModel.position.y = 0;
+                    hatModel.scaling = new BABYLON.Vector3(0.2, 0.2, 0.2);
                 });
+
+                // Скрываем кнопку трансформации и показываем кнопку возврата
+                document.getElementById("transformButton").style.display = "none";
+                document.getElementById("returnButton").style.display = "block";
             }
         }
 
-        // Обработчик события нажатия на кнопку
+        // Функция для возврата кролика
+        function returnRabbit() {
+            if (hatModel) {
+                // Удаляем модель шляпы
+                hatModel.dispose();
+
+                // Загружаем модель кролика снова
+                BABYLON.SceneLoader.Append("rabbit.glb", "", scene, function (scene) {
+                    const index = 0; // Укажите индекс меша, который вы хотите получить
+                    if (index < scene.meshes.length) {
+                        rabbitModel = scene.meshes[index]; // Сохраняем ссылку на модель кролика
+                        rabbitModel.position.y = 0; // Устанавливаем позицию модели
+                    } else {
+                        console.error("Индекс выходит за пределы массива мешей.");
+                    }
+                });
+
+                // Скрываем кнопку возврата и показываем кнопку трансформации
+                document.getElementById("returnButton").style.display = "none";
+                document.getElementById("transformButton").style.display = "block";
+            }
+        }
+
+        // Обработчики событий нажатия на кнопки
         document.getElementById("transformButton").addEventListener("click", transformRabbitToHat);
-
-        // Запускаем рендеринг
-        engine.runRenderLoop(function () {
-            scene.render();
-        });
-
-        // Обработка изменения размера окна
-        window.addEventListener("resize", function () {
-            engine.resize();
-        });
-    </script>
-</body>
-</html>
+        document.getElementById("returnButton").addEventListener("click", returnRabbit);
