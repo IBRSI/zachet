@@ -13,7 +13,7 @@ const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0)
 // Загружаем GLB модель
 BABYLON.SceneLoader.Append("rabbit.glb", "", scene, function (scene) {
     // Модель загружена, вы можете настроить ее здесь
-    const model = scene.getMeshByName("YourModelName"); // Замените "YourModelName" на имя вашей модели
+    const model = scene.getMeshByName("rabbit"); // Замените "YourModelName" на имя вашей модели
     if (model) {
         model.position.y = 0; // Устанавливаем позицию модели
     }
