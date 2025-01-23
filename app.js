@@ -16,11 +16,14 @@ const createScene = function () {
     // Создаем свет
     const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0), scene);
 
-    // Загружаем 3D модель (например, модель персонажа из фильма)
-    BABYLON.SceneLoader.ImportMesh("", "rabbit", "scene.gltf", scene, function (meshes) {
-        const model = meshes[0];
-        model.position.y = 0;
-
+    // Загружаем GLB модель
+BABYLON.SceneLoader.Append("rabbit.glb", "", scene, function (scene) {
+    // Модель загружена, вы можете настроить ее здесь
+    const model = scene.getMeshByName("YourModelName"); // Замените "YourModelName" на имя вашей модели
+    if (model) {
+        model.position.y = 0; // Устанавливаем позицию модели
+    }
+});
         // Добавляем взаимодействие с моделью
         model.actionManager = new BABYLON.ActionManager(scene);
         model.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function () {
