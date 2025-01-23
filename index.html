@@ -38,15 +38,14 @@
             if (index < scene.meshes.length) {
                 const model = scene.meshes[index]; // Получаем меш по индексу
                 model.position.y = 0; // Устанавливаем позицию модели
-                model.scaling = new BABYLON.Vector3(0.1, 0.1, 0.1); // Уменьшаем модель в 10 раз
+                model.scaling = new BABYLON.Vector3(1, 1, 1); // Уменьшаем модель в 10 раз
 
                 // Добавляем взаимодействие
                 model.actionManager = new BABYLON.ActionManager(scene);
                 model.actionManager.registerAction(
                     new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function () {
-                        // Изменяем цвет модели при нажатии
-                        model.material = new BABYLON.StandardMaterial("newMat", scene);
-                        model.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+                        // Поворачиваем модель на 180 градусов по оси Z
+                        model.rotation.z += Math.PI; // Поворот на 180 градусов
                     })
                 );
             } else {
